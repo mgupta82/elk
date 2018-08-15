@@ -1,0 +1,26 @@
+version: '2'
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.3.2
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    environment:
+      - "discovery.type=single-node"
+ 
+  kibana:
+    image: docker.elastic.co/kibana/kibana:6.3.2
+    ports:
+      - "5601:5601"
+    links:
+      - elasticsearch:elasticsearch
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:6.3.2
+    ports:
+      - "9600:9600"
+    links:
+      - elasticsearch:elasticsearch
+    volumes:
+      - ./pipeline:/usr/share/logstash/pipeline/
+      - ./logs:/usr/logs/
